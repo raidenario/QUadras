@@ -1,0 +1,6 @@
+<!-- Splash Screen -->
+<svg width="1242" height="2436" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1242" height="2436" fill="#1E3A5F"/>
+  <text x="621" y="1100" font-size="120" font-weight="bold" text-anchor="middle" fill="white">PLAYTIME</text>
+  <text x="621" y="1400" font-size="200" text-anchor="middle">🎮⚽</text>
+</svg>

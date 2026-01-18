@@ -1,0 +1,64 @@
+# ==============================================================================
+# QUADRAS - Docker Ignore
+# ==============================================================================
+
+# Build artifacts
+_build/
+deps/
+.elixir_ls/
+.lexical/
+
+# Node artifacts
+assets/node_modules/
+node_modules/
+
+# Generated static files (will be rebuilt)
+priv/static/assets/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Docker files (avoid including in context)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+cover/
+*.coverdata
+
+# Documentation
+doc/
+
+# Tmp files
+tmp/
+
+# Release scripts (use those inside container)
+rel/
+
+# Logs
+logs/
+*.log
+erl_crash.dump
+
+# Secrets (NEVER include these!)
+*.pem
+*.key
+secrets/

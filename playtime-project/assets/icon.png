@@ -1,0 +1,5 @@
+<!-- Placeholder SVG Icon -->
+<svg width="1024" height="1024" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1024" height="1024" fill="#1E3A5F" rx="180"/>
+  <text x="512" y="600" font-size="400" text-anchor="middle" fill="#FF9800">🎮</text>
+</svg>

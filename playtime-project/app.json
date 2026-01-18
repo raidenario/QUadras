@@ -1,0 +1,23 @@
+{
+    "expo": {
+        "name": "Playtime",
+        "slug": "playtime-project",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "userInterfaceStyle": "automatic",
+        "splash": {
+            "backgroundColor": "#1E3A5F"
+        },
+        "assetBundlePatterns": [
+            "**/*"
+        ],
+        "ios": {
+            "supportsTablet": true,
+            "bundleIdentifier": "com.playtime.app"
+        },
+        "android": {
+            "package": "com.playtime.app"
+        },
+        "web": {}
+    }
+}
