@@ -1,0 +1,91 @@
+# ==============================================================================
+# QUADRAS - Docker Compose
+# Stack: Elixir/Phoenix + PostgreSQL/PostGIS
+# ==============================================================================
+
+services:
+  # ============================================================================
+  # PostgreSQL with PostGIS Extension (A Memória de Longo Prazo)
+  # ============================================================================
+  db:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: quadras_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-quadras_dev}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-quadras_dev}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - quadras_network
+
+  # ============================================================================
+  # Phoenix API (O Cérebro - Development Mode)
+  # ============================================================================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: quadras_api
+    restart: unless-stopped
+    environment:
+      # Database (individual vars for dev.exs compatibility)
+      DB_HOST: db
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-quadras_dev}
+      # Also set DATABASE_URL for runtime.exs
+      DATABASE_URL: ecto://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-quadras_dev}
+      # Phoenix
+      MIX_ENV: dev
+      PHX_HOST: localhost
+      PORT: 4000
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:-dev_secret_key_base_that_should_be_at_least_64_bytes_long_for_security}
+      # PubSub (já embutido no Phoenix!)
+      PUBSUB_NAME: Quadras.PubSub
+    ports:
+      - "${PHX_PORT:-4000}:4000"
+    volumes:
+      # Mount source code for hot reloading
+      - .:/app
+      # Exclude build artifacts (use named volumes)
+      - deps:/app/deps
+      - build:/app/_build
+      - node_modules:/app/assets/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
+    networks:
+      - quadras_network
+
+# ==============================================================================
+# Networks
+# ==============================================================================
+networks:
+  quadras_network:
+    driver: bridge
+    name: quadras_network
+
+# ==============================================================================
+# Volumes
+# ==============================================================================
+volumes:
+  postgres_data:
+    name: quadras_postgres_data
+  deps:
+    name: quadras_deps
+  build:
+    name: quadras_build
+  node_modules:
+    name: quadras_node_modules

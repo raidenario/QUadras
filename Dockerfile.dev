@@ -1,0 +1,31 @@
+# ==============================================================================
+# QUADRAS - Dockerfile.dev
+# Development environment with hot reloading
+# ==============================================================================
+
+FROM elixir:1.17-otp-27-alpine
+
+# Install development dependencies
+RUN apk add --no-cache \
+    git \
+    build-base \
+    nodejs \
+    npm \
+    inotify-tools \
+    postgresql-client
+
+# Set work directory
+WORKDIR /app
+
+# Install hex + rebar
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+# Set development environment
+ENV MIX_ENV=dev
+
+# Expose Phoenix port
+EXPOSE 4000
+
+# Default command (can be overridden in docker-compose)
+CMD ["sh", "-c", "mix deps.get && mix ecto.setup && mix phx.server"]
